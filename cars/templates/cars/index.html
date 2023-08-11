@@ -1,0 +1,24 @@
+{% extends 'cars/base.html' %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<ul class="list-articles">
+    {% for post in posts %}
+        <li>
+            <div class="article-panel">
+                <p class="first">Caterogry: {{ post.cat }}</p>
+                <p class="last">Date: {{ post.time_update|date:'d-m-y H:i:s'}}</p>
+            </div>
+            {% if post.photo %}
+                <p><img src="{{ post.photo.url }}" alt="car" class="img-article-left"></p>
+            {% endif %}
+            <h2>{{ post.title }}</h2>
+            {% autoescape off %}
+                <p>{{ post.content|linebreaks|truncatewords:50}}</p>
+            {% endautoescape %}
+            <div class="clear"></div>
+            <p class="link-read-post"><a href="{{ post.get_absolute_url }}">Read the post</a></p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

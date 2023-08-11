@@ -1,0 +1,66 @@
+{% load cars_tags %}
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'cars/css/style.css' %}">
+    <link rel="shortcut icon" href="{% static 'cars/images/main.ico' %}" type="image/x-icon">
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    {% block mainmenu %}
+    <header class="header">
+        <ul id="mainmenu" class="mainmenu">
+            <li class="logo"><a href="{% url 'home' %}">
+                    <div class="logo"></div>
+                </a></li>
+            {% for m in menu %}
+                <li><a href="{% url m.url_name %}">{{ m.title }}</a></li>
+
+            {% endfor %}
+            {% if request.user.is_authenticated %}
+                <li class="last">{{ user.username }} | <a href="{% url 'logout' %}">Log Out</a></li>
+            {% else %}
+                <li class="last"> <a href="{% url 'register' %}">Registration</a> | <a href="{% url 'login' %}">Sign In</a></li>
+            {% endif %}
+        </ul>
+        <div class="clear"></div>
+    </header>
+    {% endblock mainmenu %}
+   <div class="main-container">
+        <ul id="leftchapters" class="sidebar">
+            {% if cat_selected == 0 %}
+                <li class="selected">All categories</li>
+            {% else %}
+                <li><a href="{% url 'home' %}">All categories</a></li>
+            {% endif %}
+            {% for c in cats %}
+                {% if c.get_posts.count > 0 %}
+                    {% if c.pk == cat_selected %}
+                        <li class="selected">{{ c.name }}</li>
+                    {% else %}
+                        <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+            {% include 'includes/paginator.html' %}
+        </div>
+
+    </div>
+        <footer id="footer">
+            <p>Copyright 2023 (c)</p>
+        </footer>
+</body>
+
+</html>
